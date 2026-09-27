@@ -1,0 +1,39 @@
+# Packaging outputs
+dist/
+*.zip
+submission.zip
+submission.parquet
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment and secrets
+.env
+kaggle.json
+*.key
+
+# Editor folders
+.vscode/
+.idea/
+*.swp
+*~
+
+# Execution logs and local traces
+*.log
+results/
+traces/
+test_outputs/
+
+# Prevent committing huge weights directly to Git (>100MB)
+# Note: Sample dummy LoRAs (< 1 MB) in src/adapters are tracked.
+*.bin
+*.pt
+*.pth
