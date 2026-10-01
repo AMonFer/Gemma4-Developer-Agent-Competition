@@ -10,7 +10,7 @@ Usa esta tabla para registrar cada cambio, hipótesis y puntuación obtenida en 
 | :---: | :---: | :---: | :---: | :--- | :---: | :---: | :--- |
 | **#01** | 2026-09-27 | Adrian | `main` (`baseline`) | Configuración inicial basada en `sample_submission`. | ✅ Pasó | 0.0 | Punto de partida de referencia (baseline) para el equipo. |
 | **#02** | 2026-10-01 | Adrian | `main` (v1.0) | **v1.0:** Orquestador solitario con flujo TDD (`/tmp/repro.py`), presupuestos ampliados (6 min / 30 tool calls) y reglas anti-patrones (bloqueo de bare pytest y archivos de test). | ✅ Pasó | *Pendiente* | Piso de rendimiento real (baseline en 0). |
-| **#03** | - | - | - | - | - | - | - |
+| **#03** | 2026-10-01 | Adrian | `main` (v2.0) | **v2.0:** Inyección del sub-agente `semantic_scout` para mejorar la localización de código antes del paso de reproducción. | ✅ Pasó | *Pendiente* | *Calificacion pendiente* |
 | **#04** | - | - | - | - | - | - | - |
 | **#05** | - | - | - | - | - | - | - |
 
