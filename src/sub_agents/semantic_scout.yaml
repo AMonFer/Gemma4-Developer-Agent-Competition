@@ -1,0 +1,9 @@
+name: semantic_scout
+description: Locates candidate files, classes, and functions related to a bug report or error description using semantic code search and quick inspection. Returns candidate filepaths, line ranges, and confidence levels.
+model: gemma-4-31b-it-qat-w4a16-ct
+adapter: tool_lora #LoRA placeholder for the moment
+instruction: !include ../prompts/scout.md
+tools:
+  - search_similar_code
+  - read_file
+generate_content_config: !include ../configs/sampling.yaml
