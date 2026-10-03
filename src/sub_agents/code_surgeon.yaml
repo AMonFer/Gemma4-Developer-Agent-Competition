@@ -1,0 +1,9 @@
+name: code_surgeon
+description: Applies minimal, surgical edits to existing source code files. Specializes in precise character-level modifications using edit_file while preserving exact indentation and syntax.
+model: gemma-4-31b-it-qat-w4a16-ct
+adapter: tool_lora
+instruction: !include ../prompts/surgeon.md
+tools:
+  - edit_file
+  - read_file
+generate_content_config: !include ../configs/sampling.yaml
