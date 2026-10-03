@@ -1,0 +1,10 @@
+name: graph_inspector
+description: Analyzes symbol relationships, call hierarchies, and dependency graphs (callers and callees) to trace the exact root cause of an issue starting from a suspected symbol or class.
+model: gemma-4-31b-it-qat-w4a16-ct
+adapter: tool_lora
+instruction: !include ../prompts/inspector.md
+tools:
+  - get_code_neighbors
+  - get_code_subgraph
+  - read_file
+generate_content_config: !include ../configs/sampling.yaml
