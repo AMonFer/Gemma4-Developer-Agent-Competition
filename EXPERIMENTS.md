@@ -12,7 +12,9 @@ Usa esta tabla para registrar cada cambio, hipótesis y puntuación obtenida en 
 | **#02** | 2026-10-01 | Adrian | `main` (v1.0) | **v1.0:** Orquestador solitario con flujo TDD (`/tmp/repro.py`), presupuestos ampliados (6 min / 30 tool calls) y reglas anti-patrones (bloqueo de bare pytest y archivos de test). | ✅ Pasó | 0.12 | Piso de rendimiento real (baseline en 0). |
 | **#03** | 2026-10-01 | Adrian | `main` (v2.0) | **v2.0:** Inyección del sub-agente `semantic_scout` para mejorar la localización de código antes del paso de reproducción. | ✅ Pasó | 0.12 | *Calificacion pendiente* |
 | **#04** | 2026-10-03 | Adrian | `main` (v3.0) | **v3.0:** Diagnóstico dual de localización. Inyección del subagente `graph_inspector` (AST / callers / callees) coordinado tras el `semantic_scout` para extraer el bloque exacto (`old_string`) antes de editar. | ✅ Pasó | *Pendiente* | Evalúa la efectividad del ensemble de localización (semántica + estructural). Siguiente paso del plan: v4.0 (Code Surgeon). |
-| **#05** | - | - | - | - | - | - | - |
+| **#05** | 2026-10-03 | Adrian | `main` (v4.0) | **v4.0:** Arquitectura MoA completa. Desacoplamiento de la edición con el subagente `code_surgeon` (especialista en `edit_file` quirúrgico sin alucinaciones ni errores de indentación). Orquestador actúa como puro planificador/verificador TDD con bucle de feedback. | ✅ Pasó | *Pendiente* | Evaluar si desacoplar la edición quirúrgica supera la barrera del 0.12. Próximo hito: v5.0 (entrenamiento y adaptación de pesos LoRA). |
+| **#06** | - | - | - | - | - | - | - |
+| **#07** | - | - | - | - | - | - | - |
 
 ---
 
