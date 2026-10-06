@@ -5,16 +5,11 @@ instruction: !include prompts/system.md
 tools:
   - run_command
   - read_file
+  - edit_file
   - write_file
   - get_status
   - submit_patch
   - agent_tool:
       config_path: sub_agents/semantic_scout.yaml
-      skip_summarization: true
-  - agent_tool:
-      config_path: sub_agents/graph_inspector.yaml
-      skip_summarization: true
-  - agent_tool:
-      config_path: sub_agents/code_surgeon.yaml
       skip_summarization: true
 generate_content_config: !include configs/sampling.yaml
