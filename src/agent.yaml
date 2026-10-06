@@ -9,6 +9,8 @@ tools:
   - write_file
   - get_status
   - submit_patch
+  - get_code_neighbors
+  - get_code_subgraph
   - agent_tool:
       config_path: sub_agents/semantic_scout.yaml
       skip_summarization: true
