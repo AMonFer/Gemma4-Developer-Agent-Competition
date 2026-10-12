@@ -1,5 +1,6 @@
-temperature: 0.2
+temperature: 1.0 #more variability
 top_p: 0.95
+seed: 42 #less stochastic variance
 max_output_tokens: 16384
 thinking_config:
   thinking_budget: 4096
