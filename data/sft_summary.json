@@ -1,0 +1,16 @@
+{
+  "total_tasks_processed": 129,
+  "total_samples": 824,
+  "train_samples": 741,
+  "val_samples": 83,
+  "sample_types": {
+    "surgical_edit": 695,
+    "patch_hygiene": 129
+  },
+  "repo_distribution": {
+    "fastapi/fastapi": 527,
+    "Textualize/rich": 245,
+    "psf/requests": 33,
+    "encode/httpx": 19
+  }
+}

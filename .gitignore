@@ -37,3 +37,4 @@ test_outputs/
 *.bin
 *.pt
 *.pth
+*.safetensors
