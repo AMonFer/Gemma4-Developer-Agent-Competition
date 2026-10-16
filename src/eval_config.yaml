@@ -1,7 +1,7 @@
 # Participant evaluation configuration for Stage 1 inference.
 # Calibrated budgets to strictly respect Kaggle's 12-hour GPU window.
 evaluation:
-  timeout_seconds: 150
-  max_tool_calls: 45
-  max_time_minutes: 5.0
-  max_turns: 50
+  timeout_seconds: 75
+  max_tool_calls: 50
+  max_time_minutes: 6.0
+  max_turns: 60
