@@ -18,7 +18,12 @@ from pathlib import Path
 
 # Maximum uncompressed submission size: 3 GiB
 MAX_TOTAL_SIZE_BYTES = 3 * 1024 * 1024 * 1024
-ALLOWED_MODEL = "gemma-4-31b-it-qat-w4a16-ct"
+ALLOWED_MODELS = {
+    "gemma-4-31b-it-qat-w4a16-ct",
+    "gemma-4-12b-it-qat-w4a16-ct",
+    "gemma-4-e4b-it-qat-w4a16-ct",
+    "gemma-4-e2b-it-qat-w4a16-ct",
+}
 ROOT_CONFIG_NAMES = ["agent.yaml", "agent.yml", "root_agent.yaml", "root_agent.yml"]
 ALLOWED_EXTENSIONS = {
     ".yaml",
@@ -129,10 +134,10 @@ def check_includes_and_model(root_config: Path, src_dir: Path) -> tuple[list[str
             warnings.append(f"No explicit 'model:' key found in '{root_config.name}'.")
         else:
             declared_model = model_match.group(1).strip("'\"")
-            if declared_model != ALLOWED_MODEL:
+            if declared_model not in ALLOWED_MODELS:
                 warnings.append(
-                    f"Model '{declared_model}' differs from competition requirement '{ALLOWED_MODEL}'. "
-                    f"Make sure to use '{ALLOWED_MODEL}' before submitting to Kaggle."
+                    f"Model '{declared_model}' differs from official competition models {sorted(ALLOWED_MODELS)}. "
+                    f"Make sure to use an official model alias before submitting to Kaggle."
                 )
             else:
                 log_ok(f"Declared model is valid: '{declared_model}'")
