@@ -6,6 +6,8 @@ tools:
   - read_file
   - edit_file
   - write_file
+  - search_similar_code
+  - get_code_neighbors
   - get_status
   - submit_patch
 generate_content_config: !include configs/sampling.yaml
