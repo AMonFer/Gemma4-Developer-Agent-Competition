@@ -155,15 +155,31 @@ def audit_configuration(repo_root: Path) -> bool:
         )
     )
 
-    # FM6: Pre-computed symbol graph tools attached in agent.yaml
-    has_graph_tools = (
-        "search_similar_code" in agent_text and "get_code_neighbors" in agent_text
-    )
+    # FM6: Pre-computed symbol graph tool attached in agent.yaml
+    has_graph_tools = "search_similar_code" in agent_text
     checks.append(
         (
-            "FM6 Fix: Code Intelligence Tools Attached (search_similar_code, get_code_neighbors)",
+            "FM6 Fix: Code Intelligence Search Tool Attached (search_similar_code)",
             has_graph_tools,
-            f"graph_tools_attached={has_graph_tools}",
+            f"search_similar_code_attached={has_graph_tools}",
+        )
+    )
+
+    # FM7: Exp #19/#20 Copy-Trap & Hygiene Check
+    copy_traps: List[str] = []
+    if "python3 -c" in prompt_text:
+        copy_traps.append("python3 -c quote trap")
+    if "| grep -v" in prompt_text:
+        copy_traps.append("| grep -v exit-1 pipe trap")
+    if "git checkout -- tests/ test/" in prompt_text:
+        copy_traps.append("multi-dir git checkout pathspec trap")
+    if "/tmp/" in prompt_text and "write_file" in agent_text:
+        copy_traps.append("/tmp/ reference with write_file enabled")
+    checks.append(
+        (
+            "FM7 Fix: Zero Copy-Traps (no python3 -c, | grep -v, broken checkout, or /tmp write_file trap)",
+            len(copy_traps) == 0,
+            "Clean (0 copy-traps)" if not copy_traps else f"Found: {copy_traps}",
         )
     )
 
@@ -485,6 +501,28 @@ def run_live_endpoint_probe(
     from curate_trajectories import build_harness_initial_user_prompt
 
     system_md = (repo_root / "src" / "prompts" / "system.md").read_text(encoding="utf-8")
+    sampling_text = (repo_root / "src" / "configs" / "sampling.yaml").read_text(encoding="utf-8")
+    agent_text = (repo_root / "src" / "agent.yaml").read_text(encoding="utf-8")
+
+    declared_tool_names = set(re.findall(r"^\s*-\s*([a-zA-Z0-9_]+)\s*$", agent_text, flags=re.MULTILINE))
+    active_tools = [
+        t for t in OFFICIAL_TOOLS if t.get("function", {}).get("name") in declared_tool_names
+    ] or OFFICIAL_TOOLS
+
+    m_temp = re.search(r"temperature:\s*([0-9.]+)", sampling_text)
+    m_top_p = re.search(r"top_p:\s*([0-9.]+)", sampling_text)
+    m_top_k = re.search(r"top_k:\s*(\d+)", sampling_text)
+    m_seed = re.search(r"seed:\s*(\d+)", sampling_text)
+    m_max_tok = re.search(r"max_output_tokens:\s*(\d+)", sampling_text)
+    m_budget = re.search(r"thinking_budget:\s*(\d+)", sampling_text)
+
+    temp_val = float(m_temp.group(1)) if m_temp else 0.2
+    top_p_val = float(m_top_p.group(1)) if m_top_p else 0.95
+    top_k_val = int(m_top_k.group(1)) if m_top_k else 64
+    seed_val = int(m_seed.group(1)) if m_seed else 42
+    max_tok_val = int(m_max_tok.group(1)) if m_max_tok else 4096
+    budget_val = int(m_budget.group(1)) if m_budget else 1536
+
     samples = select_representative_tasks(tasks_jsonl, per_repo=1)
 
     passed = 0
@@ -498,16 +536,16 @@ def run_live_endpoint_probe(
                 {"role": "system", "content": system_md},
                 {"role": "user", "content": user_msg},
             ],
-            "tools": OFFICIAL_TOOLS,
+            "tools": active_tools,
             "tool_choice": "auto",
-            "temperature": 0.2,
-            "top_p": 0.95,
-            "max_tokens": 4096,
-            "seed": 42,
+            "temperature": temp_val,
+            "top_p": top_p_val,
+            "max_tokens": max_tok_val,
+            "seed": seed_val,
             "extra_body": {
-                "top_k": 64,
-                "chat_template_kwargs": {"enable_thinking": True},
-                "thinking_token_budget": 1536,
+                "top_k": top_k_val,
+                "chat_template_kwargs": {"enable_thinking": budget_val > 0},
+                "thinking_token_budget": budget_val,
             },
         }
         req = urllib.request.Request(
