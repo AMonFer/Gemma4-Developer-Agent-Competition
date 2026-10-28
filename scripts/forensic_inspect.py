@@ -165,21 +165,21 @@ def audit_configuration(repo_root: Path) -> bool:
         )
     )
 
-    # FM7: Exp #19/#20 Copy-Trap & Hygiene Check
-    copy_traps: List[str] = []
+    # FM7: Exp #18 Champion Prompt Freeze Guard (prevents #19/#20 regressions)
+    prompt_regressions: List[str] = []
+    if len(prompt_bytes) != 3376:
+        prompt_regressions.append(f"size={len(prompt_bytes)}B != 3376B (#18 champion)")
+    if 'Example A: search_similar_code(query="serialize_response")' not in prompt_text:
+        prompt_regressions.append("search_similar_code demoted from Step 1 Example A")
     if "python3 -c" in prompt_text:
-        copy_traps.append("python3 -c quote trap")
-    if "| grep -v" in prompt_text:
-        copy_traps.append("| grep -v exit-1 pipe trap")
-    if "git checkout -- tests/ test/" in prompt_text:
-        copy_traps.append("multi-dir git checkout pathspec trap")
-    if "/tmp/" in prompt_text and "write_file" in agent_text:
-        copy_traps.append("/tmp/ reference with write_file enabled")
+        prompt_regressions.append("python3 -c quote trap")
+    if "git checkout -- requests/sessions.py" in prompt_text:
+        prompt_regressions.append("source-file git checkout self-wipe trap in Step 4")
     checks.append(
         (
-            "FM7 Fix: Zero Copy-Traps (no python3 -c, | grep -v, broken checkout, or /tmp write_file trap)",
-            len(copy_traps) == 0,
-            "Clean (0 copy-traps)" if not copy_traps else f"Found: {copy_traps}",
+            "FM7 Fix: Exp #18 Prompt Freeze Guard (3,376B, search_similar_code primary, 0 source-wipe traps)",
+            len(prompt_regressions) == 0,
+            "Clean (exact #18 champion prompt frozen)" if not prompt_regressions else f"Found: {prompt_regressions}",
         )
     )
 
